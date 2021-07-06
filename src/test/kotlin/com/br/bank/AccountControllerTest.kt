@@ -1,5 +1,7 @@
 package com.br.bank
 
+import com.br.bank.model.Account
+import com.br.bank.repository.AccountRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -32,7 +34,6 @@ class AccountControllerTest {
             .content(json))
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.jsonPath("\$").isMap)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(account.id))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(account.name))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.document").value(account.document))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.phone").value(account.phone))
