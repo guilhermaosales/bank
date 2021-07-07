@@ -22,9 +22,85 @@ class AccountControllerTest {
     @Autowired lateinit var accountRepository: AccountRepository
 
     @Test
+    fun `test create account validation error when name is empty` () {
+
+        val account = accountRepository.save(Account(name = "", document = "12345678910", phone = "41912345678"))
+        val json = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/accounts/")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[name] cannot be blank"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun `test create account validation error when name has less than 5 character` () {
+
+        val account = accountRepository.save(Account(name = "joao", document = "12345678910", phone = "41912345678"))
+        val json = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/accounts/")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[name] needs have at least 5 characters"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun `test create account validation error when document is empty` () {
+
+        val account = accountRepository.save(Account(name = "Joao Alfredo", document = "", phone = "41912345678"))
+        val json = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/accounts/")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[document] cannot be blank"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun `test create account validation error when document has less than 11 character` () {
+
+        val account = accountRepository.save(Account(name = "Alfredão", document = "1234567891", phone = "41912345678"))
+        val json = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/accounts/")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[document] needs have at least 11 characters"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun `test create account` () {
 
-        val account = accountRepository.save(Account(name = "Test", document = "12345678910", phone = "41912345678"))
+        val account = accountRepository.save(Account(name = "Teste", document = "12345678910", phone = "41912345678"))
         val json = ObjectMapper().writeValueAsString(account)
         accountRepository.deleteAll()
 
@@ -46,7 +122,7 @@ class AccountControllerTest {
     fun `test update account` () {
 
         val account = accountRepository
-            .save(Account(name = "Test", document = "12345678910", phone = "41912345678"))
+            .save(Account(name = "Teste", document = "12345678910", phone = "41912345678"))
             .copy(name = "Alfredo")
         val json = ObjectMapper().writeValueAsString(account)
 
