@@ -5,11 +5,18 @@ import com.br.bank.repository.AccountRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.util.Assert
 import java.util.*
 
 @Service
 class AccountServiceImpl(private val repository: AccountRepository) : AccountService {
     override fun create(account: Account): Account {
+        Assert.hasLength(account.name, "[name] cannot be blank")
+        Assert.isTrue(account.name.length >=5, "[name] needs have at least 5 characters")
+
+        Assert.hasLength(account.document, "[document] cannot be blank")
+        Assert.isTrue(account.document.length == 11, "[document] needs have at least 11 characters")
+
         return repository.save(account)
     }
 
