@@ -2,8 +2,6 @@ package com.br.bank.service
 
 import com.br.bank.model.Account
 import com.br.bank.repository.AccountRepository
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.util.Assert
 import java.util.*
